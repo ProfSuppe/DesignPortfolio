@@ -179,8 +179,8 @@
         z-index: 1;
       }
       .page.before {
-        transform: translateY(-100%);
-        opacity: 0;
+        transform: translateY(0);
+        opacity: 1;
         z-index: 2;
       }
       .page.active {
@@ -1096,6 +1096,7 @@
         const book = document.getElementById("book");
         const pages = Array.from(book.children);
         let current = 0;
+        let lastActive = null;
         let animating = false;
         const TRANSITION_MS = 850;
 
@@ -1108,7 +1109,7 @@
           pages.forEach(function (page, i) {
             page.classList.remove("active", "before");
             if (i === current) page.classList.add("active");
-            else if (i < current) page.classList.add("before");
+            else if (i === lastActive) page.classList.add("before");
           });
         }
 
@@ -1116,11 +1117,37 @@
           index = Math.max(0, Math.min(pages.length - 1, index));
           if (index === current || animating) return;
           animating = true;
-          current = index;
-          render();
-          window.setTimeout(function () {
-            animating = false;
-          }, TRANSITION_MS);
+          const forward = index > current;
+          const targetPage = pages[index];
+          lastActive = current;
+
+          function finish() {
+            current = index;
+            render();
+            window.setTimeout(function () {
+              animating = false;
+            }, TRANSITION_MS);
+          }
+
+          // Always force the target page to its correct off-screen starting
+          // position first (no transition), regardless of where it was
+          // resting before (e.g. it may already be sitting at translateY(0)
+          // from a previous transition). Without this, rapid back-and-forth
+          // navigation can skip the animation because the transform value
+          // never actually changes.
+          targetPage.classList.remove("active", "before");
+          targetPage.style.transition = "none";
+          targetPage.style.transform = forward
+            ? "translateY(100%)"
+            : "translateY(-100%)";
+          targetPage.style.zIndex = "3";
+          void targetPage.offsetHeight; // force reflow
+          requestAnimationFrame(function () {
+            targetPage.style.transition = "";
+            targetPage.style.transform = "";
+            targetPage.style.zIndex = "";
+            finish();
+          });
         }
 
         function next() {
