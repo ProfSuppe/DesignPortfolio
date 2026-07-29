@@ -1,0 +1,1210 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ramy Mansi – Design Portfolio</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --bg: #0c0c0e;
+        --surface: #131316;
+        --border: #222226;
+        --text: #e4e4ea;
+        --muted: #666670;
+        --white: #ffffff;
+        --accent: #7c6ef5;
+        --accent-soft: rgba(124, 110, 245, 0.12);
+      }
+      html {
+        scroll-behavior: smooth;
+        height: 100%;
+        overflow: hidden;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "DM Sans", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      /* NAV */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 200;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.1rem 3rem;
+        background: rgba(12, 12, 14, 0.8);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border);
+      }
+      .nav-name {
+        font-family: "DM Serif Display", serif;
+        font-size: 1rem;
+        color: var(--white);
+      }
+      .nav-right {
+        display: flex;
+        gap: 2rem;
+        align-items: center;
+      }
+      .nav-right a {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.8rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        transition: color 0.2s;
+      }
+      .nav-right a:hover {
+        color: var(--text);
+      }
+      .nav-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--accent);
+        border-radius: 50%;
+        animation: blink 2s ease-in-out infinite;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 0.3;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      /* HERO */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding: 8rem 3rem 5rem;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .hero-content {
+        max-width: 700px;
+      }
+      .hero-mono {
+        font-family: "DM Mono", monospace;
+        font-size: 0.75rem;
+        color: var(--accent);
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .hero-mono::before {
+        content: "";
+        width: 32px;
+        height: 1px;
+        background: var(--accent);
+      }
+      .hero h1 {
+        font-family: "DM Serif Display", serif;
+        font-size: clamp(3.5rem, 8vw, 6.5rem);
+        line-height: 1;
+        color: var(--white);
+        margin-bottom: 1.75rem;
+      }
+      .hero h1 em {
+        font-style: italic;
+        color: var(--accent);
+      }
+      .hero-body {
+        font-size: 1.05rem;
+        color: var(--muted);
+        line-height: 1.8;
+        max-width: 480px;
+        margin-bottom: 2.5rem;
+      }
+      .hero-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+      .chip {
+        padding: 0.3rem 0.9rem;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-family: "DM Mono", monospace;
+        color: var(--muted);
+        letter-spacing: 0.04em;
+      }
+
+      /* BOOK / PAGE FLIP PAGINATION */
+      .book {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        perspective: 2400px;
+      }
+      .page {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        background: var(--bg);
+        transform-origin: top center;
+        backface-visibility: hidden;
+        transition:
+          transform 0.85s cubic-bezier(0.65, 0, 0.35, 1),
+          opacity 0.6s ease;
+        opacity: 0;
+        pointer-events: none;
+        transform: rotateX(-90deg);
+        z-index: 1;
+      }
+      .page.before {
+        transform: rotateX(90deg);
+        opacity: 0;
+        z-index: 2;
+      }
+      .page.active {
+        transform: rotateX(0deg);
+        opacity: 1;
+        pointer-events: auto;
+        z-index: 3;
+      }
+      .page.page-center {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      /* BIG HERO SHOT */
+      .project-hero-wrap {
+        position: relative;
+        width: 100%;
+        height: 90vh;
+        overflow: hidden;
+        cursor: pointer;
+      }
+      .project-hero-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top;
+        display: block;
+        transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .project-hero-wrap:hover .project-hero-img {
+        transform: scale(1.02);
+      }
+      .project-hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          transparent 40%,
+          rgba(12, 12, 14, 0.95) 100%
+        );
+      }
+      .project-hero-label {
+        position: absolute;
+        bottom: 3rem;
+        left: 3rem;
+        right: 3rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+      .project-hero-meta {
+      }
+      .project-index {
+        font-family: "DM Mono", monospace;
+        font-size: 0.7rem;
+        color: var(--accent);
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+      }
+      .project-name {
+        font-family: "DM Serif Display", serif;
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        color: var(--white);
+        line-height: 1.1;
+      }
+      .project-type-badge {
+        padding: 0.4rem 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 999px;
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.6);
+        font-family: "DM Mono", monospace;
+        white-space: nowrap;
+        align-self: flex-end;
+      }
+
+      /* PROJECT BODY */
+      .project-body {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 7rem 3rem 4rem;
+      }
+      .project-desc-row {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 4rem;
+        margin-bottom: 4rem;
+        align-items: start;
+      }
+      .project-desc-label {
+        font-family: "DM Mono", monospace;
+        font-size: 0.7rem;
+        color: var(--accent);
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+      }
+      .project-desc-title {
+        font-family: "DM Serif Display", serif;
+        font-size: 1.6rem;
+        color: var(--white);
+        line-height: 1.3;
+      }
+      .project-desc-text {
+        font-size: 0.95rem;
+        color: var(--muted);
+        line-height: 1.85;
+      }
+      .project-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-top: 1.5rem;
+      }
+      .ptag {
+        padding: 0.2rem 0.65rem;
+        background: var(--accent-soft);
+        border: 1px solid rgba(124, 110, 245, 0.2);
+        border-radius: 4px;
+        font-family: "DM Mono", monospace;
+        font-size: 0.7rem;
+        color: var(--accent);
+      }
+
+      /* HIGHLIGHTS */
+      .highlights-label {
+        font-family: "DM Mono", monospace;
+        font-size: 0.7rem;
+        color: var(--muted);
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      .highlights-label::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+
+      .highlights-grid {
+        display: grid;
+        gap: 2px;
+      }
+      .highlights-grid.col-2 {
+        grid-template-columns: 1fr 1fr;
+      }
+      .highlights-grid.col-3 {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+      .highlights-grid.col-1 {
+        grid-template-columns: 1fr;
+      }
+
+      .highlight-card {
+        position: relative;
+        overflow: hidden;
+        background: var(--surface);
+        cursor: pointer;
+      }
+      .highlight-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: top;
+        display: block;
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .highlight-card:hover img {
+        transform: scale(1.03);
+      }
+      .highlight-card.tall {
+        min-height: 500px;
+      }
+      .highlight-card.medium {
+        min-height: 360px;
+      }
+      .highlight-card.short {
+        min-height: 260px;
+      }
+
+      .highlight-caption {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 1.5rem;
+        background: linear-gradient(
+          to top,
+          rgba(12, 12, 14, 0.9) 0%,
+          transparent 100%
+        );
+      }
+      .highlight-caption h4 {
+        font-size: 0.9rem;
+        color: var(--white);
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+      .highlight-caption p {
+        font-size: 0.78rem;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      /* LIVE BADGE */
+      .live-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.3rem 0.8rem;
+        background: rgba(34, 197, 94, 0.1);
+        border: 1px solid rgba(34, 197, 94, 0.25);
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-family: "DM Mono", monospace;
+        color: #4ade80;
+        margin-top: 1rem;
+      }
+      .live-badge::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        background: #4ade80;
+        border-radius: 50%;
+        animation: blink 1.5s ease-in-out infinite;
+      }
+      .concept-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.3rem 0.8rem;
+        background: rgba(124, 110, 245, 0.1);
+        border: 1px solid rgba(124, 110, 245, 0.25);
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-family: "DM Mono", monospace;
+        color: var(--accent);
+        margin-top: 1rem;
+      }
+
+      /* CONTACT */
+      .contact-section {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 6rem 3rem 2rem;
+        text-align: center;
+      }
+      .contact-section h2 {
+        font-family: "DM Serif Display", serif;
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        color: var(--white);
+        margin-bottom: 1rem;
+      }
+      .contact-section h2 em {
+        font-style: italic;
+        color: var(--accent);
+      }
+      .contact-section p {
+        color: var(--muted);
+        font-size: 1rem;
+        margin-bottom: 2.5rem;
+      }
+      .contact-links {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .contact-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s;
+        font-family: "DM Sans", sans-serif;
+      }
+      .contact-btn.primary {
+        background: var(--accent);
+        color: #fff;
+      }
+      .contact-btn.primary:hover {
+        background: #6a5ce3;
+        transform: translateY(-2px);
+      }
+      .contact-btn.ghost {
+        border: 1px solid var(--border);
+        color: var(--muted);
+      }
+      .contact-btn.ghost:hover {
+        border-color: #3a3a45;
+        color: var(--text);
+      }
+
+      footer {
+        padding: 2rem 3rem;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+
+      /* LIGHTBOX */
+      .lightbox {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.25rem;
+        background: rgba(12, 12, 14, 0.95);
+        padding: 3rem;
+        overflow: auto;
+      }
+      .lightbox.active {
+        display: flex;
+      }
+      .lightbox img {
+        max-width: 100%;
+        max-height: 70vh;
+        object-fit: contain;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      }
+      .lightbox-caption {
+        max-width: 700px;
+        text-align: center;
+      }
+      .lightbox-caption h4 {
+        font-size: 1rem;
+        color: var(--white);
+        font-weight: 600;
+        margin-bottom: 0.4rem;
+      }
+      .lightbox-caption p {
+        font-size: 0.85rem;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      .lightbox-caption:empty {
+        display: none;
+      }
+      .lightbox-close {
+        position: fixed;
+        top: 1.5rem;
+        right: 1.5rem;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--border);
+        border-radius: 50%;
+        color: var(--text);
+        font-size: 1.4rem;
+        line-height: 1;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          color 0.2s;
+      }
+      .lightbox-close:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: var(--white);
+      }
+
+      @media (max-width: 768px) {
+        nav {
+          padding: 1rem 1.5rem;
+        }
+        .hero {
+          padding: 7rem 1.5rem 4rem;
+        }
+        .project-body {
+          padding: 3rem 1.5rem 0;
+        }
+        .project-desc-row {
+          grid-template-columns: 1fr;
+          gap: 2rem;
+        }
+        .highlights-grid.col-2,
+        .highlights-grid.col-3 {
+          grid-template-columns: 1fr;
+        }
+        .project-hero-label {
+          left: 1.5rem;
+          right: 1.5rem;
+          bottom: 2rem;
+        }
+        footer {
+          padding: 1.5rem;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <span class="nav-name">Ramy Mansi</span>
+      <div class="nav-right">
+        <div class="nav-dot"></div>
+        <a href="#projekt1">Personal</a>
+        <a href="#projekt2">VirtualScribe</a>
+        <a href="#projekt3">km Agency</a>
+        <a href="#projekt4">km v1</a>
+      </div>
+    </nav>
+
+    <div class="book" id="book">
+      <!-- HERO -->
+      <section class="page active" id="page-intro">
+        <div class="hero">
+          <div class="hero-content">
+            <p class="hero-mono">Design Portfolio</p>
+            <h1>Vier Stile.<br />Eine <em>Handschrift.</em></h1>
+            <p class="hero-body">
+              Von minimalistisch-editorial über luxuriös-produktfokussiert bis
+              brutalistische Typografie – jedes Projekt hat eine eigene visuelle
+              Sprache. Hier ist meine Arbeit.
+            </p>
+            <div class="hero-chips">
+              <span class="chip">UI/UX Design</span>
+              <span class="chip">Figma</span>
+              <span class="chip">Webdesign</span>
+              <span class="chip">Prototyping</span>
+              <span class="chip">Frontend</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- PROJEKT 1: PERSÖNLICHE WEBSITE -->
+      <!-- ═══════════════════════════════════════ -->
+      <section class="page" id="projekt1">
+        <div class="project-hero-wrap">
+          <img
+            class="project-hero-img"
+            src="assets/PersoenlicheWebseiteHero.png"
+            alt="Persönliche Website Hero"
+          />
+          <div class="project-hero-overlay"></div>
+          <div class="project-hero-label">
+            <div class="project-hero-meta">
+              <p class="project-index">01 / 04</p>
+              <h2 class="project-name">Persönliche Website</h2>
+            </div>
+            <span class="project-type-badge">Live · Personal Branding</span>
+          </div>
+        </div>
+
+        <div class="project-body">
+          <div class="project-desc-row">
+            <div>
+              <p class="project-desc-label">Kontext</p>
+              <h3 class="project-desc-title">
+                Editorial Minimal mit Charakter
+              </h3>
+              <div class="live-badge">Live unter ramy-webseite.vercel.app</div>
+              <div class="project-tags">
+                <span class="ptag">HTML/CSS</span>
+                <span class="ptag">JavaScript</span>
+                <span class="ptag">Animation</span>
+                <span class="ptag">Responsive</span>
+              </div>
+            </div>
+            <div>
+              <p class="project-desc-text">
+                Eine persönliche Website, die gleichzeitig zeigt, dass ich
+                Informatiker und Designer bin. Das Design lebt von Spannung:
+                klares Weiß, massive Typografie, und gezielte Animationen, die
+                das Handwerk sichtbar machen. Kein Template – alles selbst
+                designed und gebaut.
+              </p>
+            </div>
+          </div>
+
+          <p class="highlights-label">Highlights</p>
+          <div class="highlights-grid col-1" style="margin-bottom: 2px">
+            <div class="highlight-card tall">
+              <img
+                src="assets/Screenshot 2026-07-29 152501.png"
+                alt="Hero Section"
+              />
+              <div class="highlight-caption">
+                <h4>Hero</h4>
+                <p>Klare Typografie, persönliches Foto – direkte Ansprache</p>
+              </div>
+            </div>
+          </div>
+          <div class="highlights-grid col-2">
+            <div class="highlight-card medium">
+              <img
+                src="assets/Screenshot 2026-07-29 152523.png"
+                alt="Side Navbar"
+              />
+              <div class="highlight-caption">
+                <h4>Side Navbar</h4>
+                <p>Erscheint beim Scrollen – Navigation die sich anpasst</p>
+              </div>
+            </div>
+            <div class="highlight-card medium">
+              <img
+                src="assets/PersoenlicheWebseiteLebenslauf.png"
+                alt="Animierter Lebenslauf"
+              />
+              <div class="highlight-caption">
+                <h4>Animierter Lebenslauf</h4>
+                <p>
+                  Timeline scrollt mit der Seite mit – interaktiv, nicht
+                  statisch
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- PROJEKT 2: VIRTUALSCRIBE -->
+      <!-- ═══════════════════════════════════════ -->
+      <section class="page" id="projekt2">
+        <div class="project-hero-wrap">
+          <img
+            class="project-hero-img"
+            src="assets/VirtualScribeHero.png"
+            alt="VirtualScribe Hero"
+          />
+          <div class="project-hero-overlay"></div>
+          <div class="project-hero-label">
+            <div class="project-hero-meta">
+              <p class="project-index">02 / 04</p>
+              <h2 class="project-name">VirtualScribe_</h2>
+            </div>
+            <span class="project-type-badge"
+              >Figma · Hochschulprojekt HSRM</span
+            >
+          </div>
+        </div>
+
+        <div class="project-body">
+          <div class="project-desc-row">
+            <div>
+              <p class="project-desc-label">Kontext</p>
+              <h3 class="project-desc-title">Luxury Product Experience</h3>
+              <div class="concept-badge">
+                Figma Klickdummy · 11 verknüpfte Pages
+              </div>
+              <div class="project-tags">
+                <span class="ptag">Figma</span>
+                <span class="ptag">UI/UX</span>
+                <span class="ptag">E-Commerce</span>
+                <span class="ptag">Prototyping</span>
+              </div>
+            </div>
+            <div>
+              <p class="project-desc-text">
+                Hochschulprojekt im Design-Modul: Eine vollständige
+                E-Commerce-Website für einen Premium-Smartpen. Viel Weißraum,
+                hochauflösende Produktfotos und minimale Eingriffe erzeugen
+                einen Luxus-Vibe. Der vollständige Klickdummy führt von der
+                Startseite über Produktseite und Warenkorb bis zum Checkout – 11
+                verknüpfte Screens.
+              </p>
+            </div>
+          </div>
+
+          <p class="highlights-label">Highlights</p>
+          <div class="highlights-grid col-1" style="margin-bottom: 2px">
+            <div class="highlight-card medium">
+              <img
+                src="assets/VirtualScribeHero.png"
+                alt="Hero VirtualScribe"
+              />
+              <div class="highlight-caption">
+                <h4>Hero – Produktinszenierung</h4>
+                <p>
+                  Zwei Pens gegenüber, viel Stille – das Produkt spricht für
+                  sich
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="highlights-grid col-2">
+            <div class="highlight-card medium">
+              <img
+                src="assets/VirtualScribeProdukte.png"
+                alt="Produkte Landingpage"
+              />
+              <div class="highlight-caption">
+                <h4>Shop-Landingpage</h4>
+                <p>
+                  Klare Hierarchie zwischen Headline, Bild und Call-to-Action
+                </p>
+              </div>
+            </div>
+            <div class="highlight-card medium">
+              <img
+                src="assets/VirtualScribeShop.png"
+                alt="Produktseite Detail"
+              />
+              <div class="highlight-caption">
+                <h4>Produktdetailseite</h4>
+                <p>
+                  Editorialer Stil mit großem Produktfoto – Exklusivität durch
+                  Reduktion
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- PROJEKT 3: km AGENCY v2 -->
+      <!-- ═══════════════════════════════════════ -->
+      <section class="page" id="projekt3">
+        <div class="project-hero-wrap">
+          <img
+            class="project-hero-img"
+            src="assets/KMHero.png"
+            alt="km Agency Hero"
+          />
+          <div class="project-hero-overlay"></div>
+          <div class="project-hero-label">
+            <div class="project-hero-meta">
+              <p class="project-index">03 / 04</p>
+              <h2 class="project-name">km Agency</h2>
+            </div>
+            <span class="project-type-badge">Figma · Agenturkonzept</span>
+          </div>
+        </div>
+
+        <div class="project-body">
+          <div class="project-desc-row">
+            <div>
+              <p class="project-desc-label">Kontext</p>
+              <h3 class="project-desc-title">
+                Brutalistisch. Selbstbewusst. Klar.
+              </h3>
+              <div class="concept-badge">Figma Konzept · pausiert</div>
+              <div class="project-tags">
+                <span class="ptag">Figma</span>
+                <span class="ptag">Branding</span>
+                <span class="ptag">Typografie</span>
+                <span class="ptag">UX-Struktur</span>
+              </div>
+            </div>
+            <div>
+              <p class="project-desc-text">
+                Konzept für eine eigene Agenturwebseite, gemeinsam mit einem
+                Kollegen. Der Designansatz: Brutalistische Typografie als
+                Ausdruck von Selbstbewusstsein – keine Kompromisse, keine
+                versteckten Botschaften. Trotzdem klar strukturiert, sodass neue
+                Besucher sofort die wichtigsten Informationen finden.
+                Koral-Orange als Signalfarbe gegen dunkle und weiße Flächen.
+              </p>
+            </div>
+          </div>
+
+          <p class="highlights-label">Highlights</p>
+          <div class="highlights-grid col-2" style="margin-bottom: 2px">
+            <div class="highlight-card tall">
+              <img src="assets/KMHero.png" alt="Brutalistische Typografie" />
+              <div class="highlight-caption">
+                <h4>Brutalistische Hero-Typografie</h4>
+                <p>„We Fix Your Apps" – kein Drumherum. Maximale Confidence.</p>
+              </div>
+            </div>
+            <div class="highlight-card tall">
+              <img src="assets/KMTypo.png" alt="Content Section" />
+              <div class="highlight-caption">
+                <h4>Struktur & Lesbarkeit</h4>
+                <p>
+                  Klare Spalten, große Schrift, keine Ablenkung – Informationen
+                  finden sich sofort
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="highlights-grid col-2">
+            <div class="highlight-card medium">
+              <img src="assets/KMStruktur.png" alt="Services Section" />
+              <div class="highlight-caption">
+                <h4>Services-Sektion</h4>
+                <p>
+                  Accordion-Struktur mit rotem CTA – Interaktion mit klarer
+                  Hierarchie
+                </p>
+              </div>
+            </div>
+            <div class="highlight-card medium">
+              <img src="assets/KMBranding.png" alt="Kellerman Branding" />
+              <div class="highlight-caption">
+                <h4>Agentur-Branding</h4>
+                <p>
+                  KellerMan – Logotyografie im brutalistischen Raster, koral auf
+                  koral
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════ -->
+      <!-- PROJEKT 4: km AGENCY v1 -->
+      <!-- ═══════════════════════════════════════ -->
+      <section class="page" id="projekt4">
+        <div class="project-hero-wrap">
+          <img
+            class="project-hero-img"
+            src="assets/KMversion1Hero.png"
+            alt="km Agency v1 Hero"
+          />
+          <div class="project-hero-overlay"></div>
+          <div class="project-hero-label">
+            <div class="project-hero-meta">
+              <p class="project-index">04 / 04</p>
+              <h2 class="project-name">km Agency v1</h2>
+            </div>
+            <span class="project-type-badge">Figma · Erstes Konzept</span>
+          </div>
+        </div>
+
+        <div class="project-body">
+          <div class="project-desc-row">
+            <div>
+              <p class="project-desc-label">Kontext</p>
+              <h3 class="project-desc-title">3D-Objekte & Layering</h3>
+              <div class="concept-badge">Figma Konzept · Erster Entwurf</div>
+              <div class="project-tags">
+                <span class="ptag">Figma</span>
+                <span class="ptag">3D-Integration</span>
+                <span class="ptag">Typografie</span>
+                <span class="ptag">Motion Concept</span>
+              </div>
+            </div>
+            <div>
+              <p class="project-desc-text">
+                Der erste Entwurf für die Agenturwebseite – ein komplett anderer
+                Ansatz. Rotes 3D-Objekt im Vordergrund, brutalistischer
+                Oversized-Text im Hintergrund. Die Komposition lebt vom
+                Layering: Typografie und 3D überlappen sich bewusst und erzeugen
+                Tiefe. Ein Hover-Detail sorgt für die besondere Interaktion.
+              </p>
+            </div>
+          </div>
+
+          <p class="highlights-label">Highlights</p>
+          <div class="highlights-grid col-1" style="margin-bottom: 2px">
+            <div class="highlight-card tall">
+              <img src="assets/KMversion1Hero.png" alt="3D Hero" />
+              <div class="highlight-caption">
+                <h4>3D-Objekt im Vordergrund</h4>
+                <p>
+                  Roter Möbiusring schwebt vor dem oversized Text – sofortige
+                  visuelle Energie
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="highlights-grid col-2">
+            <div class="highlight-card medium">
+              <img src="assets/KMversion1Typo.png" alt="Mission Section" />
+              <div class="highlight-caption">
+                <h4>Mission-Section</h4>
+                <p>
+                  Sattes Rot, wiederholter Text als Textur – intensiv und
+                  einprägsam
+                </p>
+              </div>
+            </div>
+            <div class="highlight-card medium">
+              <img
+                src="assets/KMversion1VorschauWebseiten.png"
+                alt="Hover Preview"
+              />
+              <div class="highlight-caption">
+                <h4>Hover-Vorschau</h4>
+                <p>
+                  Beim Hovern über Projektlinks erscheint ein Live-Preview
+                  direkt am Cursor – mutig und unerwartet
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- KONTAKT -->
+      <section class="page page-center" id="page-contact">
+        <div class="contact-section">
+          <h2>Zusammenarbeiten?<br /><em>Meld dich.</em></h2>
+          <p>
+            Ich suche einen Werkstudentenjob im Bereich Marketing & Webdesign.
+          </p>
+          <div class="contact-links">
+            <a href="mailto:ramy_mansi@hotmail.com" class="contact-btn primary"
+              >✉ ramy_mansi@hotmail.com</a
+            >
+            <a
+              href="https://ramy-webseite.vercel.app"
+              target="_blank"
+              class="contact-btn ghost"
+              >🌐 Meine Website</a
+            >
+            <a
+              href="https://portfolio-slider-ramy.vercel.app"
+              target="_blank"
+              class="contact-btn ghost"
+              >💼 Dev Portfolio</a
+            >
+          </div>
+        </div>
+
+        <footer>
+          <span>© 2026 Ramy Mansi</span>
+          <span>UI/UX Design · Wiesbaden</span>
+        </footer>
+      </section>
+    </div>
+
+    <!-- LIGHTBOX -->
+    <div class="lightbox" id="lightbox">
+      <button class="lightbox-close" id="lightboxClose" aria-label="Schließen">
+        ✕
+      </button>
+      <img id="lightboxImg" src="" alt="" />
+      <div class="lightbox-caption" id="lightboxCaption">
+        <h4 id="lightboxTitle"></h4>
+        <p id="lightboxText"></p>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        const lightbox = document.getElementById("lightbox");
+        const lightboxImg = document.getElementById("lightboxImg");
+        const lightboxClose = document.getElementById("lightboxClose");
+        const lightboxTitle = document.getElementById("lightboxTitle");
+        const lightboxText = document.getElementById("lightboxText");
+
+        function getCaption(img) {
+          const card = img.closest(".highlight-card");
+          if (card) {
+            const caption = card.querySelector(".highlight-caption");
+            const h4 = caption ? caption.querySelector("h4") : null;
+            const p = caption ? caption.querySelector("p") : null;
+            return {
+              title: h4 ? h4.textContent.trim() : "",
+              text: p ? p.textContent.trim() : "",
+            };
+          }
+          const heroWrap = img.closest(".project-hero-wrap");
+          if (heroWrap) {
+            const name = heroWrap.querySelector(".project-name");
+            return { title: name ? name.textContent.trim() : "", text: "" };
+          }
+          return { title: "", text: "" };
+        }
+
+        function openLightbox(src, alt, caption) {
+          lightboxImg.src = src;
+          lightboxImg.alt = alt || "";
+          lightboxTitle.textContent = caption.title || "";
+          lightboxText.textContent = caption.text || "";
+          lightbox.classList.add("active");
+        }
+
+        function closeLightbox() {
+          lightbox.classList.remove("active");
+          lightboxImg.src = "";
+          lightboxTitle.textContent = "";
+          lightboxText.textContent = "";
+        }
+
+        document
+          .querySelectorAll(".project-hero-img, .highlight-card img")
+          .forEach(function (img) {
+            img.addEventListener("click", function () {
+              openLightbox(img.src, img.alt, getCaption(img));
+            });
+          });
+
+        lightboxClose.addEventListener("click", closeLightbox);
+
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && lightbox.classList.contains("active")) {
+            closeLightbox();
+          }
+        });
+      })();
+    </script>
+
+    <!-- BOOK PAGE-FLIP PAGINATION -->
+    <script>
+      (function () {
+        const book = document.getElementById("book");
+        const pages = Array.from(book.children);
+        let current = 0;
+        let animating = false;
+        const TRANSITION_MS = 850;
+
+        function isLightboxOpen() {
+          const lb = document.getElementById("lightbox");
+          return !!lb && lb.classList.contains("active");
+        }
+
+        function render() {
+          pages.forEach(function (page, i) {
+            page.classList.remove("active", "before");
+            if (i === current) page.classList.add("active");
+            else if (i < current) page.classList.add("before");
+          });
+        }
+
+        function goTo(index) {
+          index = Math.max(0, Math.min(pages.length - 1, index));
+          if (index === current || animating) return;
+          animating = true;
+          current = index;
+          render();
+          window.setTimeout(function () {
+            animating = false;
+          }, TRANSITION_MS);
+        }
+
+        function next() {
+          goTo(current + 1);
+        }
+        function prev() {
+          goTo(current - 1);
+        }
+
+        window.addEventListener(
+          "wheel",
+          function (e) {
+            if (isLightboxOpen() || animating) return;
+            const activePage = pages[current];
+            const atTop = activePage.scrollTop <= 0;
+            const atBottom =
+              Math.ceil(activePage.scrollTop + activePage.clientHeight) >=
+              activePage.scrollHeight;
+
+            if (e.deltaY > 0 && atBottom) {
+              e.preventDefault();
+              next();
+            } else if (e.deltaY < 0 && atTop) {
+              e.preventDefault();
+              prev();
+            }
+          },
+          { passive: false },
+        );
+
+        window.addEventListener("keydown", function (e) {
+          if (isLightboxOpen()) return;
+          if (e.key === "ArrowDown" || e.key === "PageDown") {
+            e.preventDefault();
+            next();
+          } else if (e.key === "ArrowUp" || e.key === "PageUp") {
+            e.preventDefault();
+            prev();
+          }
+        });
+
+        let touchStartY = null;
+        window.addEventListener(
+          "touchstart",
+          function (e) {
+            touchStartY = e.touches[0].clientY;
+          },
+          { passive: true },
+        );
+        window.addEventListener(
+          "touchend",
+          function (e) {
+            if (touchStartY === null || isLightboxOpen()) return;
+            const deltaY = touchStartY - e.changedTouches[0].clientY;
+            const activePage = pages[current];
+            const atTop = activePage.scrollTop <= 0;
+            const atBottom =
+              Math.ceil(activePage.scrollTop + activePage.clientHeight) >=
+              activePage.scrollHeight;
+            if (Math.abs(deltaY) > 60) {
+              if (deltaY > 0 && atBottom) next();
+              else if (deltaY < 0 && atTop) prev();
+            }
+            touchStartY = null;
+          },
+          { passive: true },
+        );
+
+        document.querySelectorAll('nav a[href^="#"]').forEach(function (link) {
+          link.addEventListener("click", function (e) {
+            e.preventDefault();
+            const targetId = link.getAttribute("href").slice(1);
+            const target = document.getElementById(targetId);
+            if (!target) return;
+            const targetPage = target.closest(".page");
+            if (!targetPage) return;
+            goTo(pages.indexOf(targetPage));
+          });
+        });
+
+        render();
+      })();
+    </script>
+  </body>
+</html>
